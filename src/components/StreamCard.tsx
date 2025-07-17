@@ -2,7 +2,7 @@
 import React from 'react';
 import { Stream } from '../types';
 import { useStreams } from '../contexts/StreamContext';
-import { Play, Square, Trash2, Edit, Activity, Users, Wifi, Clock, Upload, AlertTriangle } from 'lucide-react';
+import { Play, Square, Trash2, Edit, Activity, Users, Wifi, Clock, Upload, AlertTriangle, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -79,23 +79,25 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
   };
 
   return (
-    <Card className="bg-white border-gray-200 shadow-lg hover:shadow-xl transition-all duration-200">
-      <CardHeader className="pb-3">
+    <Card className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+      <CardHeader className="pb-4 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-gray-900 text-lg truncate">{stream.title}</CardTitle>
-            <div className="flex items-center space-x-3 mt-2">
-              <Badge className={`${getStatusColor(stream.status)} text-white border-0`}>
+            <CardTitle className="text-gray-900 text-xl font-semibold truncate mb-3">
+              {stream.title}
+            </CardTitle>
+            <div className="flex items-center flex-wrap gap-2">
+              <Badge className={`${getStatusColor(stream.status)} text-white border-0 px-3 py-1 font-medium`}>
                 {getStatusText(stream.status)}
               </Badge>
-              <Badge variant="outline" className="border-gray-300 text-gray-700 bg-gray-50">
+              <Badge variant="outline" className="border-gray-300 text-gray-700 bg-white px-3 py-1">
                 {stream.quality}
               </Badge>
-              <Badge variant="outline" className="border-gray-300 text-gray-700 bg-gray-50">
+              <Badge variant="outline" className="border-gray-300 text-gray-700 bg-white px-3 py-1">
                 {stream.mode}
               </Badge>
               {stream.isLooping && (
-                <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50">
+                <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50 px-3 py-1">
                   Loop
                 </Badge>
               )}
@@ -105,7 +107,7 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+              className="text-gray-500 hover:text-gray-900 hover:bg-white/50 rounded-lg"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -114,7 +116,7 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
               size="icon"
               onClick={handleDelete}
               disabled={stream.status === 'live' || stream.status === 'starting'}
-              className="text-gray-500 hover:text-red-600 hover:bg-red-50"
+              className="text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -122,86 +124,93 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 p-6">
         {/* Stream Key */}
-        <div className="space-y-1">
-          <p className="text-sm text-gray-600 font-medium">YouTube Stream Key</p>
-          <div className="bg-gray-50 border border-gray-200 rounded-md p-2 font-mono text-sm text-gray-800 truncate">
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">YouTube Stream Key</p>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 font-mono text-sm text-gray-800 truncate">
             {stream.youtubeKey || 'Not configured'}
           </div>
         </div>
 
-        {/* Metrics Grid */}
+        {/* Live Metrics */}
         {(stream.status === 'live' || stream.status === 'starting') && metrics && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center space-x-1">
-                <Wifi className="h-3 w-3 text-green-600" />
-                <span className="text-xs text-gray-600">Ping</span>
-              </div>
-              <p className="text-sm font-medium text-gray-900">{metrics.ping}ms</p>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
+            <div className="flex items-center mb-3">
+              <Eye className="h-4 w-4 text-blue-600 mr-2" />
+              <span className="font-semibold text-blue-900">Live Metrics</span>
             </div>
-            
-            <div className="space-y-1">
-              <div className="flex items-center space-x-1">
-                <Users className="h-3 w-3 text-blue-600" />
-                <span className="text-xs text-gray-600">Viewers</span>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Wifi className="h-4 w-4 text-green-600 mr-1" />
+                  <span className="text-xs font-medium text-gray-600">PING</span>
+                </div>
+                <p className="text-lg font-bold text-gray-900">{metrics.ping}ms</p>
               </div>
-              <p className="text-sm font-medium text-gray-900">{metrics.viewerCount.toLocaleString()}</p>
-            </div>
-            
-            <div className="space-y-1">
-              <div className="flex items-center space-x-1">
-                <Upload className="h-3 w-3 text-yellow-600" />
-                <span className="text-xs text-gray-600">Upload</span>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Users className="h-4 w-4 text-blue-600 mr-1" />
+                  <span className="text-xs font-medium text-gray-600">VIEWERS</span>
+                </div>
+                <p className="text-lg font-bold text-gray-900">{metrics.viewerCount.toLocaleString()}</p>
               </div>
-              <p className="text-sm font-medium text-gray-900">{metrics.uploadSpeed.toFixed(1)} Mbps</p>
-            </div>
-            
-            <div className="space-y-1">
-              <div className="flex items-center space-x-1">
-                <Clock className="h-3 w-3 text-red-600" />
-                <span className="text-xs text-gray-600">Duration</span>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Upload className="h-4 w-4 text-yellow-600 mr-1" />
+                  <span className="text-xs font-medium text-gray-600">UPLOAD</span>
+                </div>
+                <p className="text-lg font-bold text-gray-900">{metrics.uploadSpeed.toFixed(1)} Mbps</p>
               </div>
-              <p className="text-sm font-medium text-gray-900">{metrics.duration}</p>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Clock className="h-4 w-4 text-red-600 mr-1" />
+                  <span className="text-xs font-medium text-gray-600">DURATION</span>
+                </div>
+                <p className="text-lg font-bold text-gray-900">{metrics.duration}</p>
+              </div>
             </div>
           </div>
         )}
 
         {/* Dropped Frames Warning */}
         {stream.status === 'live' && metrics && metrics.droppedFrames > 10 && (
-          <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-md">
-            <AlertTriangle className="h-4 w-4 text-red-600" />
-            <span className="text-sm text-red-800">
-              {metrics.droppedFrames} frames dropped - Check network connection
-            </span>
+          <div className="flex items-center space-x-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-red-800">Connection Issues Detected</p>
+              <p className="text-xs text-red-700">{metrics.droppedFrames} frames dropped - Check network connection</p>
+            </div>
           </div>
         )}
 
         {/* File Info */}
         {stream.fileName && (
-          <div className="space-y-1">
-            <p className="text-sm text-gray-600 font-medium">Video File</p>
-            <p className="text-sm text-gray-800 truncate bg-gray-50 p-2 rounded border">{stream.fileName}</p>
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Video File</p>
+            <p className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg border truncate">{stream.fileName}</p>
           </div>
         )}
 
         {/* Overlay Text */}
         {stream.overlayText && (
-          <div className="space-y-1">
-            <p className="text-sm text-gray-600 font-medium">Overlay Text</p>
-            <p className="text-sm text-gray-800 bg-gray-50 p-2 rounded border">{stream.overlayText}</p>
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Overlay Text</p>
+            <p className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg border">{stream.overlayText}</p>
           </div>
         )}
 
         {/* Controls */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+          <div className="flex items-center space-x-3">
             {stream.status === 'offline' && (
               <Button
                 onClick={handleStart}
                 size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-lg px-4 py-2"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Start Stream
@@ -213,7 +222,7 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
                 onClick={handleStop}
                 size="sm"
                 variant="destructive"
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transition-all duration-200 rounded-lg px-4 py-2"
               >
                 <Square className="h-4 w-4 mr-2" />
                 Stop Stream
@@ -221,7 +230,7 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
             )}
 
             {stream.status === 'stopping' && (
-              <Button size="sm" disabled className="bg-gray-400">
+              <Button size="sm" disabled className="bg-gray-400 rounded-lg px-4 py-2">
                 <Activity className="h-4 w-4 mr-2 animate-spin" />
                 Stopping...
               </Button>
@@ -229,9 +238,10 @@ export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
           </div>
           
           {stream.status === 'live' && (
-            <Badge className="bg-red-100 text-red-800 border-red-200">
-              Broadcasting
-            </Badge>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-red-600">Broadcasting Live</span>
+            </div>
           )}
         </div>
       </CardContent>
