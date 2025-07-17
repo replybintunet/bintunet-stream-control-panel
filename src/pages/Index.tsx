@@ -10,10 +10,10 @@ const Index = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin text-purple-500 mx-auto" />
-          <p className="text-slate-400">Loading BintuNet Live Panel...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-red-600 mx-auto" />
+          <p className="text-gray-600">Loading BintuNet Live Panel...</p>
         </div>
       </div>
     );
